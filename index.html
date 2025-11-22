@@ -260,6 +260,8 @@
 </head>
 <body>
 
+    <audio id="bgm" src="hjm.mp3" loop></audio>
+
     <div id="overlay">
         <div class="glass-card galgame-box" id="startBtn">
             <div class="ui-corner top-left"></div>
@@ -288,20 +290,22 @@
         const startBtn = document.getElementById('startBtn');
         const overlay = document.getElementById('overlay');
         const body = document.body;
+        // ⭐ 步骤二: 获取 audio 元素
+        const bgm = document.getElementById('bgm');
 
         const wishes = [
-            { text: "旮旯game男主", emoji: "🎮" },      // 对应二次元
-            { text: "旮旯game男主", emoji: "🎮" },      // 对应二次元
-            { text: "马拉松必破PB", emoji: "🏃‍♂️" },     // 对应跑步
-            { text: "配速直接起飞", emoji: "🚀" },    // 跑步梗
-            { text: "主角光环加身", emoji: "👑" },    // 番剧梗
-            { text: "铁膝盖永不伤", emoji: "🦵" },    // 跑者最需要的祝福
-            { text: "好感度全拉满", emoji: "💘" },    // Galgame攻略梗
-            { text: "新番从不踩雷", emoji: "📺" },    // 追番祝福
-            { text: "撞墙期不存在", emoji: "🧱" },    // 马拉松术语
-            { text: "撕漫男本人", emoji: "✨" },      // 夸他长得像漫画走出来的
-            { text: "完赛奖牌手软", emoji: "🥇" },     // 荣誉祝福
-            { text: "饱饱好棒~", emoji: "❤" }     // 荣誉祝福
+            { text: "旮旯game男主", emoji: "🎮" },
+            { text: "旮旯game男主", emoji: "🎮" },
+            { text: "马拉松必破PB", emoji: "🏃‍♂️" },
+            { text: "配速直接起飞", emoji: "🚀" },
+            { text: "主角光环加身", emoji: "👑" },
+            { text: "铁膝盖永不伤", emoji: "🦵" },
+            { text: "好感度全拉满", emoji: "💘" },
+            { text: "新番从不踩雷", emoji: "📺" },
+            { text: "撞墙期不存在", emoji: "🧱" },
+            { text: "撕漫男本人", emoji: "✨" },
+            { text: "完赛奖牌手软", emoji: "🥇" },
+            { text: "饱饱好棒~", emoji: "❤" }
         ];
 
         // 炫彩颜色库 (背景渐变)
@@ -322,6 +326,11 @@
         startBtn.addEventListener('click', (e) => {
             e.stopPropagation(); // 防止冒泡立即触发body点击
             
+            // ⭐ 步骤三: 启动音乐播放
+            bgm.play().catch(error => {
+                console.error("音乐播放失败:", error);
+            });
+
             // 隐藏遮罩
             overlay.style.opacity = '0';
             setTimeout(() => {
