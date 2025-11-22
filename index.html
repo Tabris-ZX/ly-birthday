@@ -288,175 +288,197 @@
     </div>
 
     <script>
-        const startBtn = document.getElementById('startBtn');
-        const overlay = document.getElementById('overlay');
-        const body = document.body;
-        // ⭐ 步骤二: 获取 audio 元素
-        const bgm = document.getElementById('bgm');
+    const startBtn = document.getElementById('startBtn');
+    const overlay = document.getElementById('overlay');
+    const body = document.body;
+    // ⭐ 步骤二: 获取 audio 元素
+    const bgm = document.getElementById('bgm');
 
-        const wishes = [
-            { text: "旮旯game男主", emoji: "🎮" },
-            { text: "旮旯game男主", emoji: "🎮" },
-            { text: "马拉松必破PB", emoji: "🏃‍♂️" },
-            { text: "配速直接起飞", emoji: "🚀" },
-            { text: "主角光环加身", emoji: "👑" },
-            { text: "好感度全拉满", emoji: "💘" },
-            { text: "撞墙期不存在", emoji: "🧱" },
-            { text: "饱饱好棒~", emoji: "❤" }
-        ];
+    const wishes = [
+        { text: "旮旯game男主", emoji: "🎮" },
+        { text: "旮旯game男主", emoji: "🎮" },
+        { text: "马拉松必破PB", emoji: "🏃‍♂️" },
+        { text: "配速直接起飞", emoji: "🚀" },
+        { text: "主角光环加身", emoji: "👑" },
+        { text: "好感度全拉满", emoji: "💘" },
+        { text: "撞墙期不存在", emoji: "🧱" },
+        { text: "饱饱好棒~", emoji: "❤" }
+    ];
 
-        // 炫彩颜色库 (背景渐变)
-        const gradients = [
-            "linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)",
-            "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
-            "linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)",
-            "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
-            "linear-gradient(to right, #fa709a 0%, #fee140 100%)",
-            "linear-gradient(to top, #fff1eb 0%, #ace0f9 100%)",
-            "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
-        ];
+    // 炫彩颜色库 (背景渐变)
+    const gradients = [
+        "linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)",
+        "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
+        "linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)",
+        "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
+        "linear-gradient(to right, #fa709a 0%, #fee140 100%)",
+        "linear-gradient(to top, #fff1eb 0%, #ace0f9 100%)",
+        "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
+    ];
 
-        let isActive = false;
-        let popups = []; // 存储所有弹窗对象以便管理运动
+    let isActive = false;
+    let popups = []; // 存储所有弹窗对象以便管理运动
 
-        // 1. 点击开始逻辑
-        startBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // 防止冒泡立即触发body点击
-            
-            // ⭐ 步骤三: 启动音乐播放
-            bgm.play().catch(error => {
-                console.error("音乐播放失败:", error);
-            });
-
-            // 隐藏遮罩
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-                isActive = true;
-                startCelebration();
-            }, 800);
+    // 1. 点击开始逻辑
+    startBtn.addEventListener('click', (e) => {
+        e.stopPropagation(); // 防止冒泡立即触发body点击
+        
+        // ⭐ 步骤三: 启动音乐播放
+        bgm.play().catch(error => {
+            console.error("音乐播放失败:", error);
         });
 
-        // 2. 核心庆祝逻辑
-        function startCelebration() {
-            // 播放彩带
-            fireConfetti();
-            
-            // 初始爆发生成一堆弹窗
-            let count = 0;
-            const initialBurst = setInterval(() => {
+        // 隐藏遮罩
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            isActive = true;
+            startCelebration();
+        }, 800);
+    });
+
+    // 2. 核心庆祝逻辑
+    function startCelebration() {
+        // 播放彩带
+        fireConfetti();
+        
+        // 初始爆发生成一堆弹窗
+        let count = 0;
+        const initialBurst = setInterval(() => {
+            createPopup();
+            count++;
+            if(count > 15) clearInterval(initialBurst);
+        }, 200);
+
+        // 持续缓慢生成
+        setInterval(() => {
+            if (popups.length < 40) { // 限制屏幕上最多有多少个，防止卡顿
                 createPopup();
-                count++;
-                if(count > 15) clearInterval(initialBurst);
-            }, 200);
+            }
+        }, 1500);
 
-            // 持续缓慢生成
-            setInterval(() => {
-                if (popups.length < 40) { // 限制屏幕上最多有多少个，防止卡顿
-                    createPopup();
-                }
-            }, 1500);
-
-            // 启动物理引擎（让弹窗飘动）
-            animatePopups();
-        }
-
-        // 3. 创建单个祝福弹窗
-        function createPopup(x, y) {
-            const popup = document.createElement('div');
-            popup.className = 'glass-card wish-popup';
+        // 启动物理引擎（让弹窗飘动）
+        animatePopups();
+    }
+    
+    // ✨ 新增: 移除弹窗的逻辑函数
+    function removePopup(popupItem) {
+        if (popupItem.element && body.contains(popupItem.element)) {
+            // 移除 DOM 元素
+            popupItem.element.remove();
             
-            // 随机内容
-            const content = wishes[Math.floor(Math.random() * wishes.length)];
-            popup.innerHTML = `<span class="emoji">${content.emoji}</span><p>${content.text}</p>`;
-            
-            // 随机颜色风格 (叠加在玻璃态之上)
-            const bg = gradients[Math.floor(Math.random() * gradients.length)];
-            popup.style.background = bg;
-            popup.style.boxShadow = `0 10px 25px ${getComputedStyle(popup).backgroundColor}`; // 简单的发光模拟
-
-            // 随机位置 (如果没有指定 x,y)
-            const startX = x || Math.random() * (window.innerWidth - 200);
-            const startY = y || Math.random() * (window.innerHeight - 150);
-            
-            popup.style.left = startX + 'px';
-            popup.style.top = startY + 'px';
-
-            // 物理属性 (用于飘动)
-            const velocity = {
-                x: (Math.random() - 0.5) * 3, // 水平速度
-                y: (Math.random() - 0.5) * 3  // 垂直速度
-            };
-
-            body.appendChild(popup);
-            
-            // 存入数组管理
-            popups.push({ element: popup, velocity: velocity });
-
-            // 点击弹窗本身产生分裂效果
-            popup.addEventListener('click', (e) => {
-                e.stopPropagation();
-                createPopup(e.clientX, e.clientY);
-                createPopup(e.clientX + 50, e.clientY + 50);
-                fireConfetti();
-            });
-        }
-
-        // 4. 点击屏幕任意位置
-        document.addEventListener('click', (e) => {
-            if (!isActive) return;
-            createPopup(e.clientX, e.clientY);
-            fireConfetti();
-        });
-
-        // 5. 弹窗飘动动画系统 (DVD屏保效果)
-        function animatePopups() {
-            popups.forEach((item, index) => {
-                const el = item.element;
-                const rect = el.getBoundingClientRect();
-                
-                // 获取当前位置
-                let currentLeft = parseFloat(el.style.left);
-                let currentTop = parseFloat(el.style.top);
-
-                // 移动
-                currentLeft += item.velocity.x;
-                currentTop += item.velocity.y;
-
-                // 碰壁反弹逻辑
-                if (currentLeft <= 0 || currentLeft + rect.width >= window.innerWidth) {
-                    item.velocity.x *= -1;
-                    currentLeft = Math.max(0, Math.min(currentLeft, window.innerWidth - rect.width));
-                }
-                if (currentTop <= 0 || currentTop + rect.height >= window.innerHeight) {
-                    item.velocity.y *= -1;
-                    currentTop = Math.max(0, Math.min(currentTop, window.innerHeight - rect.height));
-                }
-
-                // 应用新位置
-                el.style.left = currentLeft + 'px';
-                el.style.top = currentTop + 'px';
-            });
-
-            requestAnimationFrame(animatePopups);
-        }
-
-        // 6. 彩带生成器
-        function fireConfetti() {
-            const colors = ['#ffc0cb', '#ff69b4', '#7fffd4', '#ffd700', '#87cefa'];
-            for (let i = 0; i < 30; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-                confetti.style.opacity = Math.random();
-                body.appendChild(confetti);
-
-                // 动画结束后移除
-                setTimeout(() => confetti.remove(), 4000);
+            // 从 popups 数组中移除
+            const index = popups.indexOf(popupItem);
+            if (index > -1) {
+                popups.splice(index, 1);
             }
         }
-    </script>
+    }
+
+    // 3. 创建单个祝福弹窗
+    function createPopup(x, y) {
+        const popup = document.createElement('div');
+        popup.className = 'glass-card wish-popup';
+        
+        // 随机内容
+        const content = wishes[Math.floor(Math.random() * wishes.length)];
+        popup.innerHTML = `<span class="emoji">${content.emoji}</span><p>${content.text}</p>`;
+        
+        // 随机颜色风格 (叠加在玻璃态之上)
+        const bg = gradients[Math.floor(Math.random() * gradients.length)];
+        popup.style.background = bg;
+        popup.style.boxShadow = `0 10px 25px ${getComputedStyle(popup).backgroundColor}`; // 简单的发光模拟
+
+        // 随机位置 (如果没有指定 x,y)
+        const startX = x || Math.random() * (window.innerWidth - 200);
+        const startY = y || Math.random() * (window.innerHeight - 150);
+        
+        popup.style.left = startX + 'px';
+        popup.style.top = startY + 'px';
+
+        // 物理属性 (用于飘动)
+        const velocity = {
+            x: (Math.random() - 0.5) * 3, // 水平速度
+            y: (Math.random() - 0.5) * 3  // 垂直速度
+        };
+
+        body.appendChild(popup);
+        
+        // 存入数组管理
+        const newPopup = { element: popup, velocity: velocity };
+        popups.push(newPopup);
+
+        // 点击弹窗本身产生分裂效果
+        popup.addEventListener('click', (e) => {
+            e.stopPropagation();
+            createPopup(e.clientX, e.clientY);
+            createPopup(e.clientX + 50, e.clientY + 50);
+            fireConfetti();
+            // 点击后也立即移除自身
+            removePopup(newPopup);
+        });
+
+        // ✨ 自动移除: 5秒后自动移除弹窗
+        setTimeout(() => {
+            removePopup(newPopup);
+        }, 5000); // 5000毫秒 = 5秒
+    }
+
+    // 4. 点击屏幕任意位置
+    document.addEventListener('click', (e) => {
+        if (!isActive) return;
+        createPopup(e.clientX, e.clientY);
+        fireConfetti();
+    });
+
+    // 5. 弹窗飘动动画系统 (DVD屏保效果)
+    function animatePopups() {
+        popups.forEach((item, index) => {
+            const el = item.element;
+            const rect = el.getBoundingClientRect();
+            
+            // 获取当前位置
+            let currentLeft = parseFloat(el.style.left);
+            let currentTop = parseFloat(el.style.top);
+
+            // 移动
+            currentLeft += item.velocity.x;
+            currentTop += item.velocity.y;
+
+            // 碰壁反弹逻辑
+            if (currentLeft <= 0 || currentLeft + rect.width >= window.innerWidth) {
+                item.velocity.x *= -1;
+                currentLeft = Math.max(0, Math.min(currentLeft, window.innerWidth - rect.width));
+            }
+            if (currentTop <= 0 || currentTop + rect.height >= window.innerHeight) {
+                item.velocity.y *= -1;
+                currentTop = Math.max(0, Math.min(currentTop, window.innerHeight - rect.height));
+            }
+
+            // 应用新位置
+            el.style.left = currentLeft + 'px';
+            el.style.top = currentTop + 'px';
+        });
+
+        requestAnimationFrame(animatePopups);
+    }
+
+    // 6. 彩带生成器
+    function fireConfetti() {
+        const colors = ['#ffc0cb', '#ff69b4', '#7fffd4', '#ffd700', '#87cefa'];
+        for (let i = 0; i < 30; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            confetti.style.opacity = Math.random();
+            body.appendChild(confetti);
+
+            // 动画结束后移除
+            setTimeout(() => confetti.remove(), 4000);
+        }
+    }
+</script>
 </body>
 </html>
