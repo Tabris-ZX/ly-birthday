@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ 🦌🐜生日快乐！✨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=ZCOOL+KuaiLe&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* 禁止选中文字，防止破坏美感 */
+        }
+
+        body {
+            font-family: 'ZCOOL KuaiLe', cursive; /* 使用可爱字体 */
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            /* 梦幻的动态背景 */
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 覆盖全屏的遮罩，用于初始状态 */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease;
+        }
+
+        /* 核心：流光玻璃态卡片样式 */
+        .glass-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.4); /* 极细的高光边框 */
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        /* 初始欢迎弹窗 */
+        .welcome-box {
+            position: relative; /* 相对定位，为了放在 flex 容器中间 */
+            padding: 60px 80px;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.2), inset 0 0 20px rgba(255,255,255,0.8);
+            animation: float 3s ease-in-out infinite;
+            z-index: 10000;
+        }
+
+        .welcome-box:hover {
+            transform: scale(1.05);
+        }
+
+        .welcome-box h1 {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+            background: linear-gradient(to right, #fff, #ffeebb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-box p {
+            font-size: 2rem;
+            color: #fff;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+        }
+
+        .click-hint {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            animation: pulse 1.5s infinite;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+
+        /* 生成的祝福弹窗 */
+        .wish-popup {
+            padding: 20px 30px;
+            min-width: 180px;
+            pointer-events: auto; /* 允许点击 */
+            /* 初始状态 */
+            transform: scale(0); 
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .wish-popup span.emoji {
+            display: block;
+            font-size: 3.5rem;
+            margin-bottom: 5px;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
+        }
+
+        .wish-popup p {
+            font-size: 1.8rem;
+            font-weight: bold;
+            white-space: nowrap;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        /* 彩带特效 */
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            z-index: 1;
+            animation: fall linear forwards;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0) rotate(-30deg); opacity: 0; }
+            to { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+        /* Galgame 风格特定样式 */
+        .galgame-box {
+            position: relative;
+            padding: 50px 60px;
+            background: rgba(255, 240, 245, 0.85); /* 浅粉色背景 */
+            border: 3px solid #ff85a2; /* 粉色边框 */
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.6), inset 0 0 30px rgba(255, 255, 255, 0.8);
+            max-width: 500px;
+            width: 90%;
+            text-align: left; /* 游戏对话通常靠左 */
+            animation: float 3s ease-in-out infinite;
+            font-family: 'ZCOOL KuaiLe', cursive;
+        }
+
+        /* 左上角的系统标签 */
+        .galgame-tag {
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: #ff85a2;
+            color: white;
+            padding: 5px 15px;
+            font-size: 0.9rem;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* 名字栏 */
+        .name-tag {
+            font-size: 2.2rem;
+            color: #d6336c;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #ff85a2;
+            padding-bottom: 10px;
+            text-shadow: 1px 1px 0px white;
+        }
+
+        /* 对话内容 */
+        .dialogue-content p {
+            font-size: 1.4rem;
+            color: #444;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        /* 选项按钮 - 模仿游戏选项 */
+        .choice-btn {
+            margin-top: 30px;
+            background: white;
+            border: 2px solid #ff85a2;
+            color: #ff85a2;
+            padding: 15px 0;
+            text-align: center;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice-btn:hover {
+            background: #ff85a2;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 133, 162, 0.4);
+        }
+
+        /* 闪烁的光标 */
+        .cursor {
+            animation: blink 1s infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 四个角的装饰，增加科技感/UI感 */
+        .ui-corner {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border: 3px solid #ff85a2;
+            transition: all 0.3s;
+        }
+        .top-left { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .top-right { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .bottom-right { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+        
+        .galgame-box:hover .ui-corner {
+            width: 25px;
+            height: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="overlay">
+        <div class="glass-card galgame-box" id="startBtn">
+            <div class="ui-corner top-left"></div>
+            <div class="ui-corner top-right"></div>
+            <div class="ui-corner bottom-left"></div>
+            <div class="ui-corner bottom-right"></div>
+
+            <div class="galgame-tag">SYSTEM MESSAGE</div>
+            
+            <div class="name-tag">🦌🐜 の 生日事件</div>
+
+            <div class="dialogue-content">
+                <p>检测到关键角色「🦌🐜」进入服务器。</p>
+                <p>体力值已回满，魅力值 MAX！✨</p>
+                <p>是否立即加载【庆生主线】剧情？</p>
+            </div>
+
+            <div class="choice-btn">
+                <span class="cursor">▶</span> 
+                【 确认开启 · Start 】
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('startBtn');
+        const overlay = document.getElementById('overlay');
+        const body = document.body;
+
+        const wishes = [
+            { text: "旮旯game男主", emoji: "🎮" },      // 对应二次元
+            { text: "旮旯game男主", emoji: "🎮" },      // 对应二次元
+            { text: "马拉松必破PB", emoji: "🏃‍♂️" },     // 对应跑步
+            { text: "配速直接起飞", emoji: "🚀" },    // 跑步梗
+            { text: "主角光环加身", emoji: "👑" },    // 番剧梗
+            { text: "铁膝盖永不伤", emoji: "🦵" },    // 跑者最需要的祝福
+            { text: "好感度全拉满", emoji: "💘" },    // Galgame攻略梗
+            { text: "新番从不踩雷", emoji: "📺" },    // 追番祝福
+            { text: "撞墙期不存在", emoji: "🧱" },    // 马拉松术语
+            { text: "撕漫男本人", emoji: "✨" },      // 夸他长得像漫画走出来的
+            { text: "完赛奖牌手软", emoji: "🥇" },     // 荣誉祝福
+            { text: "饱饱好棒~", emoji: "❤" }     // 荣誉祝福
+        ];
+
+        // 炫彩颜色库 (背景渐变)
+        const gradients = [
+            "linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%)",
+            "linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%)",
+            "linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%)",
+            "linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%)",
+            "linear-gradient(to right, #fa709a 0%, #fee140 100%)",
+            "linear-gradient(to top, #fff1eb 0%, #ace0f9 100%)",
+            "linear-gradient(to right, #4facfe 0%, #00f2fe 100%)"
+        ];
+
+        let isActive = false;
+        let popups = []; // 存储所有弹窗对象以便管理运动
+
+        // 1. 点击开始逻辑
+        startBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // 防止冒泡立即触发body点击
+            
+            // 隐藏遮罩
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                isActive = true;
+                startCelebration();
+            }, 800);
+        });
+
+        // 2. 核心庆祝逻辑
+        function startCelebration() {
+            // 播放彩带
+            fireConfetti();
+            
+            // 初始爆发生成一堆弹窗
+            let count = 0;
+            const initialBurst = setInterval(() => {
+                createPopup();
+                count++;
+                if(count > 15) clearInterval(initialBurst);
+            }, 200);
+
+            // 持续缓慢生成
+            setInterval(() => {
+                if (popups.length < 40) { // 限制屏幕上最多有多少个，防止卡顿
+                    createPopup();
+                }
+            }, 1500);
+
+            // 启动物理引擎（让弹窗飘动）
+            animatePopups();
+        }
+
+        // 3. 创建单个祝福弹窗
+        function createPopup(x, y) {
+            const popup = document.createElement('div');
+            popup.className = 'glass-card wish-popup';
+            
+            // 随机内容
+            const content = wishes[Math.floor(Math.random() * wishes.length)];
+            popup.innerHTML = `<span class="emoji">${content.emoji}</span><p>${content.text}</p>`;
+            
+            // 随机颜色风格 (叠加在玻璃态之上)
+            const bg = gradients[Math.floor(Math.random() * gradients.length)];
+            popup.style.background = bg;
+            popup.style.boxShadow = `0 10px 25px ${getComputedStyle(popup).backgroundColor}`; // 简单的发光模拟
+
+            // 随机位置 (如果没有指定 x,y)
+            const startX = x || Math.random() * (window.innerWidth - 200);
+            const startY = y || Math.random() * (window.innerHeight - 150);
+            
+            popup.style.left = startX + 'px';
+            popup.style.top = startY + 'px';
+
+            // 物理属性 (用于飘动)
+            const velocity = {
+                x: (Math.random() - 0.5) * 3, // 水平速度
+                y: (Math.random() - 0.5) * 3  // 垂直速度
+            };
+
+            body.appendChild(popup);
+            
+            // 存入数组管理
+            popups.push({ element: popup, velocity: velocity });
+
+            // 点击弹窗本身产生分裂效果
+            popup.addEventListener('click', (e) => {
+                e.stopPropagation();
+                createPopup(e.clientX, e.clientY);
+                createPopup(e.clientX + 50, e.clientY + 50);
+                fireConfetti();
+            });
+        }
+
+        // 4. 点击屏幕任意位置
+        document.addEventListener('click', (e) => {
+            if (!isActive) return;
+            createPopup(e.clientX, e.clientY);
+            fireConfetti();
+        });
+
+        // 5. 弹窗飘动动画系统 (DVD屏保效果)
+        function animatePopups() {
+            popups.forEach((item, index) => {
+                const el = item.element;
+                const rect = el.getBoundingClientRect();
+                
+                // 获取当前位置
+                let currentLeft = parseFloat(el.style.left);
+                let currentTop = parseFloat(el.style.top);
+
+                // 移动
+                currentLeft += item.velocity.x;
+                currentTop += item.velocity.y;
+
+                // 碰壁反弹逻辑
+                if (currentLeft <= 0 || currentLeft + rect.width >= window.innerWidth) {
+                    item.velocity.x *= -1;
+                    currentLeft = Math.max(0, Math.min(currentLeft, window.innerWidth - rect.width));
+                }
+                if (currentTop <= 0 || currentTop + rect.height >= window.innerHeight) {
+                    item.velocity.y *= -1;
+                    currentTop = Math.max(0, Math.min(currentTop, window.innerHeight - rect.height));
+                }
+
+                // 应用新位置
+                el.style.left = currentLeft + 'px';
+                el.style.top = currentTop + 'px';
+            });
+
+            requestAnimationFrame(animatePopups);
+        }
+
+        // 6. 彩带生成器
+        function fireConfetti() {
+            const colors = ['#ffc0cb', '#ff69b4', '#7fffd4', '#ffd700', '#87cefa'];
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.opacity = Math.random();
+                body.appendChild(confetti);
+
+                // 动画结束后移除
+                setTimeout(() => confetti.remove(), 4000);
+            }
+        }
+    </script>
+</body>
+</html>
